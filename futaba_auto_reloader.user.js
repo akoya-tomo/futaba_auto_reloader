@@ -28,6 +28,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
 	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する
+	var USE_BOARD_NAME = true;				//板名をタブに表示する
 
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
@@ -35,8 +36,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var script_name = "futaba_auto_reloader_k";
 	var isWindowActive = true;	// タブのアクティブ状態
 	var isNotificationEnable = USE_NOTIFICATION_DEFAULT;	// 通知の有効フラグ
+	var serverName = document.domain.match(/^[^.]+/);
+	var boardName = $("#tit").text().match(/^[^＠]+/);
 
 	if(!isFileNotFound()){
+        set_title();
 		setNormalReload();
 	}
 	soudane();
@@ -433,5 +437,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			}
 		);
 	}
+	// タイトルに板名を追加する
+	function set_title() {
+	  if ( USE_BOARD_NAME ) {
+		if(boardName == "二次元裏"){
+			boardName = serverName;
+		}
+	    document.title = boardName + " " + document.title;
+      }
+    }
 	
 })(jQuery);
