@@ -30,7 +30,7 @@
 アドオンの設定に関して
 
 * KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください  
-* [KOSHIAN 返信フォームを固定](http://toshiakisp.github.io/akahuku-firefox-sp/)アドオンを使用することをおすすめします(実況モード時は自動スクロールするため)  
+* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンを使用することをおすすめします(実況モード時は自動スクロールするため)  
 * [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンがインストールされていると通知のアイコンがスレ画になります  
 
 通知機能に関して
