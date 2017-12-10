@@ -1,9 +1,9 @@
-## なにコレ
-ブラウザ上で動くUserscriptです  
-[Greasemonkey](https://addons.mozilla.org/ja/firefox/addon/greasemonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください  
+## futaba\_auto\_reloader\_K
+このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba\_auto\_reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです  
+[Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください  
 
 ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます  
-※このUserscriptは[赤福Firefox SP](http://toshiakisp.github.io/akahuku-firefox-sp/)の機能を使用しているためFirefox専用となります  
+※このUserscriptは[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンの機能を使用しているためFirefox専用となります  
 
 ## 機能
 * 自動更新(1分毎にリロード)
@@ -17,17 +17,17 @@
 * 各機能のカスタマイズはソースを参照
 * (v1.7)新着レスをポップアップで通知  
   スレを表示していない時に新着レスがあるとポップアップで表示されます
+* (rev1)板名をタブのタイトルに表示
 
 
 ## 注意事項
-※このUserscriptはFirefoxで[赤福Firefox SP](http://toshiakisp.github.io/akahuku-firefox-sp/)をインストールしている事が前提となります
+※このUserscriptはFirefoxで[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンをインストールしている事が前提となります
 
-赤福の設定から  
-* 「続きを読む」→ 「続きを読む」を有効にした状態で使用してください  
-<del>　「続きを読む」 → 「リロードの代わりに続きを読む」  </del>
-<del>を有効にした状態で使用してください(赤福の「同期する」機能は処理が重たいため無効を推奨します)  </del>(v1.6で「リロードの代わりに続きを読む」の設定を変更する必要がなくなりました)  
-* 「フォーム」→「フォームを固定」を有効にすることをおすすめします(実況モード時は自動スクロールするため)  
-* 「続きを読む」→ 「区切り」を有効にした状態で使用してください(新着レス数の表示・新着レスの通知に必要)  
+アドオンの設定に関して
+
+* KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください  
+* [KOSHIAN 返信フォームを固定](http://toshiakisp.github.io/akahuku-firefox-sp/)アドオンを使用することをおすすめします(実況モード時は自動スクロールするため)  
+* [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンがインストールされていると通知のアイコンがスレ画になります  
 
 通知機能に関して
 
@@ -40,6 +40,14 @@
 	 に設定してください
 
 ## 更新履歴
+
+* v1.7.1rev1 2017-12-10
+  - KOSHIAN リロード拡張アドオン用に改変
+  - 板名をタブのタイトルに表示する機能を追加
+
+***
+
+以下、オリジナル版futaba\_auto\_reloaderの更新履歴  
 
 * v1.7.1 2016-11-13
   - https対応
