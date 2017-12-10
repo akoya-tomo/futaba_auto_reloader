@@ -1,11 +1,10 @@
 // ==UserScript==
-// @name           futaba auto reloader
-// @namespace      https://github.com/himuro-majika
-// @description    赤福Firefox版で自動更新しちゃう(実況モードもあるよ！)
-// @author         himuro_majika
+// @name           futaba auto reloader k
+// @namespace      https://github.com/akoya-tomo
+// @description    KOSHIAN リロード拡張で自動更新しちゃう(実況モードもあるよ！)
+// @author         akoya_tomo
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
-// @include        http://board.futakuro.com/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
 // @version        1.7.1
 // @grant          GM_addStyle
@@ -33,7 +32,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
 	var url = location.href;
-	var script_name = "futaba_auto_reloader";
+	var script_name = "futaba_auto_reloader_k";
 	var isWindowActive = true;	// タブのアクティブ状態
 	var isNotificationEnable = USE_NOTIFICATION_DEFAULT;	// 通知の有効フラグ
 
@@ -119,7 +118,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			$notificationButton.css("background-color", "#a9d8ff");
 		}
 
-		var $input = $("input[value$='信する']");
+		var $input = $("input[name$='email']");	//KOSHIAN 返信フォームを固定に合わせて位置変更
 		$input.after($notificationButton);
 		$input.after($liveButton);
 		if(SHOW_NORMAL_BUTTON){
@@ -160,14 +159,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				//自動スクロール
 				timerLiveScroll = setInterval(live_scroll, LIVE_SCROLL_INTERVAL);
 				$liveButton.css("backgroundColor", "#ffa5f0");
-				startspin();
+//				startspin();	//未実装
 				console.log(script_name + ": Start live mode @" + url);
 				live_flag = true;
 			} else {
 				clearInterval(timerLiveReload);
 				clearInterval(timerLiveScroll);
 				$liveButton.css("background", "none");
-				stopspin();
+//				stopspin();		//未実装
 				console.log(script_name + ": Stop live mode @" + url);
 				live_flag = false;
 			}
@@ -236,8 +235,9 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ページ末尾でホイールダウンした時
 		window.addEventListener("DOMMouseScroll",function scroll(event) {
 			var window_y = window.scrollY;
-			var window_ymax = window.scrollMaxY;
-			if (event.detail > 0 && window_y >= window_ymax) {
+            var window_ymax = window.scrollMaxY-0.5;	//window_yが小数点以下の誤差でずれる対応
+//			console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
+			if (event.detail > 0 && window_y >= window_ymax ) {
 				reset_titlename();
 			}
 			return;
@@ -263,7 +263,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			//404時
 			clearNormalReload();
 			if (USE_SAVE_MHT) {
-				saveMHT();
+//				saveMHT();	//未実装
 			}
 			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		}
@@ -273,10 +273,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 	
 	/**
-	 * 赤福の続きを読むボタンをクリック
+	 * KOSHIANの［リロード］ボタンをクリック
 	 */
 	function clickrelbutton() {
-		var relbutton = $("#akahuku_reload_button").get(0);
+		var relbutton = $("#contres > a").get(0);	//KOSHIANの[リロード]ボタン取得
 		if(relbutton){
 			var e = document.createEvent("MouseEvents");
 			e.initEvent("click", false, true);
@@ -320,7 +320,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function changetitle() {
 		if ( USE_TITLE_NAME ) {
 			var title_char = title_name();
-			var newres = $("#akahuku_new_reply_header_number").text();
+			var newres = $("#KOSHIAN_NOTIFY").text().match(/\d+/);	//KOSHIANの新着レス数取得
 			if (isAkahukuNotFound()) {
 				document.title = "#" + title_char;
 			} else {
@@ -335,7 +335,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 	// 新着レスの内容を取得
 	function getNewResContent() {
-		var $newrestable = $("#akahuku_new_reply_header ~ table:not([id])");
+		var $newrestable = $("#KOSHIAN_NOTIFY").nextAll('table');	//KOSHIAN新着レステーブル取得
 		if ($newrestable.length) {
 			var restexts = [];
 			$newrestable.each(function() {
@@ -352,11 +352,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		}
 	}
 	/*
-	 * 赤福のステータスからスレ消滅状態をチェック
+	 * KOSHIANのステータスからスレ消滅状態をチェック
 	 */
 	function isAkahukuNotFound() {
-		var statustext = $("#akahuku_reload_status").text();
-		if (statustext.match(/(No Future)|((M|N)ot Found)/)) {
+		var statustext = $("#KOSHIAN_NOTIFY").text();
+		if (statustext.match(/CODE\:404/)) {
 			return true;
 		}
 		else {
@@ -421,7 +421,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	// 新着レスをポップアップでデスクトップ通知する
 	function showNotification(body) {
 		Notification.requestPermission();
-		var icon = $("#akahuku_thumbnail").attr("src");
+		//KOSHIAN Favicon Changerからアイコン取得
+		var icon = $("head > link[rel='shortcut icon']").attr("href");
+		if (icon == null) {
+			icon = "https://www.2chan.net/favicon.ico";
+		}
 		var instance = new Notification(
 			document.title, {
 				body: body,
