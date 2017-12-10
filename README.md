@@ -20,6 +20,10 @@
 * (rev1)板名をタブのタイトルに表示
 
 
+## インストール
+[GitHub](https://github.com/akoya-tomo/futaba_auto_reloader_K/raw/master/futaba_auto_reloader.user.js)
+
+
 ## 注意事項
 ※このUserscriptはFirefoxで[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンをインストールしている事が前提となります
 
