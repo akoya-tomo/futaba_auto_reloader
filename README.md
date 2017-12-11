@@ -1,5 +1,5 @@
-## futaba\_auto\_reloader\_K
-このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba\_auto\_reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです  
+## こしあんでもオートリロードがしたい！
+このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです  
 [Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください  
 
 ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます  
@@ -21,6 +21,7 @@
 
 
 ## インストール
+[GreasyFork](https://greasyfork.org/ja/scripts/36235-futaba-auto-reloader-k)　
 [GitHub](https://github.com/akoya-tomo/futaba_auto_reloader_K/raw/master/futaba_auto_reloader.user.js)
 
 
@@ -42,6 +43,12 @@
 	ロケーションバー(URLバー)の左のアイコンをクリックして  
 	 **「サイトからの通知の表示」** を **「許可」**  
 	 に設定してください
+
+オリジナル版にあってこのUserscriptに無い機能について
+
+* ふたボードはKOSHIAN リロード拡張が動作しないため非対応です
+* スレ消滅時にMHT保存する隠し機能がありません
+* 実況モードON時の顔マーク回転がありません
 
 ## 更新履歴
 
