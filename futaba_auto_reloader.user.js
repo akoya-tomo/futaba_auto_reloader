@@ -239,7 +239,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ページ末尾でホイールダウンした時
 		window.addEventListener("DOMMouseScroll",function scroll(event) {
 			var window_y = window.scrollY;
-            var window_ymax = window.scrollMaxY-0.5;	//window_yが小数点以下の誤差でずれる対応
+            var window_ymax = window.scrollMaxY-0.5;	//window_yがWindowsで拡大率使用時に小数点以下でずれる対応
 //			console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
 			if (event.detail > 0 && window_y >= window_ymax ) {
 				reset_titlename();
