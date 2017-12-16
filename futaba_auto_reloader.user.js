@@ -6,7 +6,7 @@
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev1
+// @version        1.7.1rev2
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
@@ -239,7 +239,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ページ末尾でホイールダウンした時
 		window.addEventListener("DOMMouseScroll",function scroll(event) {
 			var window_y = window.scrollY;
-            var window_ymax = window.scrollMaxY-0.5;	//window_yが小数点以下の誤差でずれる対応
+            var window_ymax = window.scrollMaxY-0.5;	//window_yがWindowsで拡大率使用時に小数点以下でずれる対応
 //			console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
 			if (event.detail > 0 && window_y >= window_ymax ) {
 				reset_titlename();
@@ -324,12 +324,12 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function changetitle() {
 		if ( USE_TITLE_NAME ) {
 			var title_char = title_name();
-			var newres = $("#KOSHIAN_NOTIFY").text().match(/\d+/);	//KOSHIANの新着レス数取得
+			var newres = $("#KOSHIAN_NOTIFY").text().match(/新着レス:(\d+)/);	//KOSHIANの新着レス数取得
 			if (isAkahukuNotFound()) {
 				document.title = "#" + title_char;
 			} else {
 				if(newres) {
-					res += parseInt(newres);
+					res += parseInt(newres[1]);
 				}
 				if ( res !== 0) {
 					document.title = "(" + res + ")" + title_char;
