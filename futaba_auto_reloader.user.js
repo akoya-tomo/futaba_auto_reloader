@@ -324,12 +324,12 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function changetitle() {
 		if ( USE_TITLE_NAME ) {
 			var title_char = title_name();
-			var newres = $("#KOSHIAN_NOTIFY").text().match(/\d+/);	//KOSHIANの新着レス数取得
+			var newres = $("#KOSHIAN_NOTIFY").text().match(/新着レス:(\d+)/);	//KOSHIANの新着レス数取得
 			if (isAkahukuNotFound()) {
 				document.title = "#" + title_char;
 			} else {
 				if(newres) {
-					res += parseInt(newres);
+					res += parseInt(newres[1]);
 				}
 				if ( res !== 0) {
 					document.title = "(" + res + ")" + title_char;
