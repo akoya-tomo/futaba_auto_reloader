@@ -5,6 +5,9 @@
 ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます  
 ※このUserscriptは[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンの機能を使用しているためFirefox専用となります  
 
+※このスクリプトにも使えるKOSHIAN リロード拡張の改変版は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki)の一覧からどうぞ
+
+
 ## 機能
 * 自動更新(1分毎にリロード)
 * 実況モード(デフォルト5秒毎にリロード+スクロール)  
