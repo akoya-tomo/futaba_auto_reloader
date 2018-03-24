@@ -1,26 +1,26 @@
 ## こしあんでもオートリロードがしたい！
-このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです  
-[Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください  
+このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです。  
+[Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください。  
 
-ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます  
-※このUserscriptは[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンの機能を使用しているためFirefox専用となります  
+ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます。  
 
-※このスクリプトにも使えるKOSHIAN リロード拡張の改変版は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki)の一覧からどうぞ
+※このUserscriptは[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンの機能を使用しているためFirefox専用となります。  
+※このスクリプトにも使えるKOSHIAN リロード拡張の改変版は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki)の一覧からどうぞ。
 
 
 ## 機能
 * 自動更新(1分毎にリロード)
 * 実況モード(デフォルト5秒毎にリロード+スクロール)  
-  Alt + L(デフォルト)でON/OFFできます
+  Alt + L(デフォルト)でON/OFFできます。
 * 新着レス数およびスレ消滅状態をタブのタイトルに表示  
- 他のタブを見ていても新着レスがあるかスレが消えたかが分かります  
- ページ末尾でホイールダウン(またはF5キー押下)するとリセットできます  
+  他のタブを見ていても新着レスがあるかスレが消えたかが分かります。  
+  ページ末尾でホイールダウンするとリセットできます。  
 * そうだねが付いてるレスをハイライト表示(そうだねが多いとだんだんソーダ色になります)
 * レスフォームのコメント欄を消去するボタンを追加
 * 各機能のカスタマイズはソースを参照
-* (v1.7)新着レスをポップアップで通知  
-  スレを表示していない時に新着レスがあるとポップアップで表示されます
-* (rev1)板名をタブのタイトルに表示
+* 新着レスをポップアップで通知  
+  スレを表示していない時に新着レスがあるとポップアップで表示されます。
+* 板名をタブのタイトルに表示
 
 
 ## インストール
@@ -29,32 +29,34 @@
 
 
 ## 注意事項
-※このUserscriptはFirefoxで[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンをインストールしている事が前提となります
+※このUserscriptはFirefoxで[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンまたは[KOSHIAN リロード拡張 改](https://github.com/akoya-tomo/koshian_reload_futaba_kai)アドオンをインストールしている事が前提となります。
 
 アドオンの設定に関して
 
-* KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください  
-* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンを使用することをおすすめします(実況モード時は自動スクロールするため)  
-* [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンか[futaba favicon changer](https://greasyfork.org/ja/scripts/39342-futaba-favicon-changer/)スクリプトがインストールされていると通知のアイコンがスレ画になります  
+* KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください。  
+* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンを使用することをおすすめします。(実況モード時は自動スクロールするため)  
+* [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンか[futaba favicon changer](https://greasyfork.org/ja/scripts/39342-futaba-favicon-changer/)スクリプトがインストールされていると通知のアイコンがスレ画になります。  
 
 通知機能に関して
 
 *  [通知]ボタンをクリックした際に初回のみ「このサイトからの通知を表示しますか？」と確認が出るので  
 	 **「常に通知を表示する」**  
-	 を選択してください  
+	 を選択してください。  
 *	「通知をブロックする」を選んだ場合その後確認は表示されないので後から通知を有効にするには  
 	ロケーションバー(URLバー)の左のアイコンをクリックして  
 	 **「サイトからの通知の表示」** を **「許可」**  
-	 に設定してください
+	 に設定してください。
 
 オリジナル版にあってこのUserscriptに無い機能について
 
-* ふたボードはKOSHIAN リロード拡張が動作しないため非対応です
-* スレ消滅時にMHT保存する隠し機能がありません
-* 実況モードON時の顔マーク回転がありません
+* ふたボードはKOSHIAN リロード拡張が動作しないため非対応です。
+* スレ消滅時にMHT保存する隠し機能がありません。
+* 実況モードON時の顔マーク回転がありません。
 
 ## 更新履歴
 
+* v1.7.1rev3 2018-03-24
+  - KOSHIAN フォーム拡張アドオンと併用すると誤動作する不具合修正
 * v1.7.1rev2 2017-12-16
   - リロード時のエラーコードを新着レス数と誤認識する不具合修正
 * v1.7.1rev1 2017-12-10
