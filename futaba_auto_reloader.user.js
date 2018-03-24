@@ -41,7 +41,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var boardName = $("#tit").text().match(/^[^＠]+/);
 
 	if(!isFileNotFound()){
-        set_title();
+		set_title();
 		setNormalReload();
 	}
 	soudane();
@@ -151,7 +151,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				normal_flag = true;
 			}
 
-		 }
+		}
 
 		/*
 		 * 実況モード
@@ -164,14 +164,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				//自動スクロール
 				timerLiveScroll = setInterval(live_scroll, LIVE_SCROLL_INTERVAL);
 				$liveButton.css("backgroundColor", "#ffa5f0");
-//				startspin();	//未実装
+				//startspin();	//未実装
 				console.log(script_name + ": Start live mode @" + url);
 				live_flag = true;
 			} else {
 				clearInterval(timerLiveReload);
 				clearInterval(timerLiveScroll);
 				$liveButton.css("background", "none");
-//				stopspin();		//未実装
+				//stopspin();		//未実装
 				console.log(script_name + ": Stop live mode @" + url);
 				live_flag = false;
 			}
@@ -229,7 +229,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				});
 			}
 
-		 }
+		}
 	}
 
 
@@ -240,8 +240,8 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ページ末尾でホイールダウンした時
 		window.addEventListener("DOMMouseScroll",function scroll(event) {
 			var window_y = window.scrollY;
-            var window_ymax = window.scrollMaxY-0.5;	//window_yがWindowsで拡大率使用時に小数点以下でずれる対応
-//			console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
+			var window_ymax = window.scrollMaxY-0.5;	//window_yがWindowsで拡大率使用時に小数点以下でずれる対応
+			//console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
 			if (event.detail > 0 && window_y >= window_ymax ) {
 				reset_titlename();
 			}
@@ -268,7 +268,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			//404時
 			clearNormalReload();
 			if (USE_SAVE_MHT) {
-//				saveMHT();	//未実装
+				//saveMHT();	//未実装
 			}
 			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		}
@@ -361,7 +361,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 */
 	function isAkahukuNotFound() {
 		var statustext = $("#KOSHIAN_NOTIFY").text();
-		if (statustext.match(/CODE\:404/)) {
+		if (statustext.match(/CODE:404/)) {
 			return true;
 		}
 		else {
@@ -412,21 +412,21 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			"}"
 		);
 	}
-	// タブのアクティブ状態を取得
+	//タブのアクティブ状態を取得
 	function setWindowFocusEvent() {
 		$(window).focus();
 		$(window).bind("focus", function() {
-			// タブアクティブ時
+			//タブアクティブ時
 			isWindowActive = true;
 		}).bind("blur", function() {
-			// タブ非アクティブ時
+			//タブ非アクティブ時
 			isWindowActive = false;
 		});
 	}
-	// 新着レスをポップアップでデスクトップ通知する
+	//新着レスをポップアップでデスクトップ通知する
 	function showNotification(body) {
 		Notification.requestPermission();
-		//KOSHIAN Favicon Changerからアイコン取得
+		//ファビコンからアイコン取得
 		var icon = $("head > link[rel='shortcut icon']").attr("href");
 		if (icon == null) {
 			icon = "https://www.2chan.net/favicon.ico";
@@ -438,14 +438,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			}
 		);
 	}
-	// タイトルに板名を追加する
+	//タイトルに板名を追加する
 	function set_title() {
-	  if ( USE_BOARD_NAME ) {
-		if(boardName == "二次元裏"){
-			boardName = serverName;
+		if ( USE_BOARD_NAME ) {
+			if (boardName == "二次元裏") {
+				boardName = serverName;
+			}
+			document.title = boardName + " " + document.title;
 		}
-	    document.title = boardName + " " + document.title;
-      }
-    }
-	
+	}
+
 })(jQuery);
