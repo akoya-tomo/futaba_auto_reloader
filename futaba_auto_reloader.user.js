@@ -247,6 +247,12 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			}
 			return;
 		} ,false);
+		//F5キー押された時
+		window.addEventListener("keydown",function(e) {
+			if ( e.keyCode == "116" ) {
+				reset_titlename();
+			}
+		}, false);
 
 		function reset_titlename() {
 			res = 0;
