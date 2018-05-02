@@ -6,7 +6,7 @@
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev3
+// @version        1.7.1rev4
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
@@ -239,14 +239,20 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function reset_title() {
 		//ページ末尾でホイールダウンした時
 		window.addEventListener("DOMMouseScroll",function scroll(event) {
-			var window_y = window.scrollY;
-			var window_ymax = window.scrollMaxY-0.5;	//window_yがWindowsで拡大率使用時に小数点以下でずれる対応
+			var window_y = Math.ceil(window.scrollY);	//Windowsで拡大率使用時に小数点以下でずれる対応
+			var window_ymax = window.scrollMaxY;
 			//console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
 			if (event.detail > 0 && window_y >= window_ymax ) {
 				reset_titlename();
 			}
 			return;
 		} ,false);
+		//F5キー押された時
+		window.addEventListener("keydown",function(e) {
+			if ( e.keyCode == "116" ) {
+				reset_titlename();
+			}
+		}, false);
 
 		function reset_titlename() {
 			res = 0;
