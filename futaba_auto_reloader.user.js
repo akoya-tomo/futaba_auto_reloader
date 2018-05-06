@@ -87,6 +87,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			css: {
 				cursor: "pointer",
 				"background-color": "#ea8",
+				display: "inline-block"
 			},
 			click: function() {
 				normalMode();
@@ -102,6 +103,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			title: (RELOAD_INTERVAL_LIVE / 1000) + "秒毎のリロード + スクロール",
 			css: {
 				cursor: "pointer",
+				display: "inline-block"
 			},
 			click: function() {
 				liveMode();
@@ -114,6 +116,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			title: "新着レスのポップアップ通知",
 			css: {
 				cursor: "pointer",
+				display: "inline-block"
 			},
 			click: function() {
 				toggleNotification();
