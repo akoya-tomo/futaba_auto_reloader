@@ -34,7 +34,7 @@
 アドオンの設定に関して
 
 * KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください。  
-* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンを使用することをおすすめします。(実況モード時は自動スクロールするため)  
+* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンまたは[KOSHIAN 返信フォームを固定 改](https://github.com/akoya-tomo/koshian_float_form_kai/)アドオンを使用することをおすすめします。(実況モード時は自動スクロールするため)  
 * [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンか[futaba favicon changer](https://greasyfork.org/ja/scripts/39342-futaba-favicon-changer/)スクリプトがインストールされていると通知のアイコンがスレ画になります。  
 
 通知機能に関して
@@ -55,6 +55,8 @@
 
 ## 更新履歴
 
+* v1.7.1rev5 2018-05-06
+  - 返信フォームの幅を狭くしたときにボタンが途中で折り返される不具合を修正  
 * v1.7.1rev4 2018-05-03
   - KOSHIAN リロード拡張 改 v1.5.0で[F5]キーによる新着レスが取得できるようになったので、  
     オリジナル版futaba auto reloaderにあった[F5]キーで新着レス数をクリアする機能を復活
