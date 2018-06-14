@@ -31,6 +31,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する
 	var USE_BOARD_NAME = true;				//板名をタブに表示する
 	var NOTIFY_THREAD_NOT_FOUND = false;	//スレの消滅を通知する（通知ボタンとは独立して動作）
+	var KEEP_THREAD_NOT_FOUND_MARK = false;		//タイトルのスレ消滅表示をリセット操作で消さない（true = 消さない : false = 消す）
 
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
@@ -265,14 +266,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			var window_y = Math.ceil(window.scrollY);	//Windowsで拡大率使用時に小数点以下でずれる対応
 			var window_ymax = window.scrollMaxY;
 			//console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
-			if (event.detail > 0 && window_y >= window_ymax ) {
+			if (event.detail > 0 && window_y >= window_ymax && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound())) {
 				reset_titlename();
 			}
 			return;
 		} ,false);
 		//F5キー押された時
 		window.addEventListener("keydown",function(e) {
-			if ( e.keyCode == "116" ) {
+			if ( e.keyCode == "116" && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound()) ) {
 				reset_titlename();
 			}
 		}, false);
