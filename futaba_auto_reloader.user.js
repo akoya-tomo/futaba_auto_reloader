@@ -28,7 +28,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var LIVE_TOGGLE_KEY = "76";						//実況モードON・OFF切り替えキーコード(With Alt)
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
-	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する
+	//var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する（未実装）
 	var USE_BOARD_NAME = true;				//板名をタブに表示する
 	var NOTIFY_THREAD_NOT_FOUND = false;	//スレの消滅を通知する（通知ボタンとは独立して動作）
 	var KEEP_THREAD_NOT_FOUND_MARK = false;		//タイトルのスレ消滅表示をリセット操作で消さない（true = 消さない : false = 消す）
@@ -296,9 +296,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				var popupText = "スレは落ちています\r\n自動更新を停止しました";
 				showNotification(popupText);
 			}
+			/*
 			if (USE_SAVE_MHT) {
 				//saveMHT();	//未実装
 			}
+			*/
 			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		}
 		else {
