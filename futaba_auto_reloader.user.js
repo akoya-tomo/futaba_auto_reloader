@@ -6,7 +6,7 @@
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev5
+// @version        1.7.1rev6
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
@@ -28,8 +28,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var LIVE_TOGGLE_KEY = "76";						//実況モードON・OFF切り替えキーコード(With Alt)
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
-	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する
+	//var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する（未実装）
 	var USE_BOARD_NAME = true;				//板名をタブに表示する
+	var NOTIFY_THREAD_NOT_FOUND = false;	//スレの消滅を通知する（通知ボタンとは独立して動作）
+	var KEEP_THREAD_NOT_FOUND_MARK = false;		//タイトルのスレ消滅表示をリセット操作で消さない（true = 消さない : false = 消す）
 
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
@@ -55,6 +57,25 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function setNormalReload() {
 		timerNormal = setInterval(rel, RELOAD_INTERVAL_NORMAL);
 		console.log(script_name + ": Start auto reloading @" + url);
+	
+		document.addEventListener("KOSHIAN_reload", (e) => {
+			soudane();
+			changetitle();
+			if (!isWindowActive && isNotificationEnable) {
+				getNewResContent();
+			}
+		});
+
+		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
+			clearNormalReload();
+			changetitle();
+			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
+				var popupText = "スレは落ちています\r\n自動更新を停止しました";
+				showNotification(popupText);
+			}
+			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
+		});
+
 	}
 	//通常リロード停止
 	function clearNormalReload() {
@@ -245,14 +266,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			var window_y = Math.ceil(window.scrollY);	//Windowsで拡大率使用時に小数点以下でずれる対応
 			var window_ymax = window.scrollMaxY;
 			//console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
-			if (event.detail > 0 && window_y >= window_ymax ) {
+			if (event.detail > 0 && window_y >= window_ymax && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound())) {
 				reset_titlename();
 			}
 			return;
 		} ,false);
 		//F5キー押された時
 		window.addEventListener("keydown",function(e) {
-			if ( e.keyCode == "116" ) {
+			if ( e.keyCode == "116" && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound()) ) {
 				reset_titlename();
 			}
 		}, false);
@@ -265,14 +286,21 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 
 	function rel() {
-		soudane();
-		setTimeout(changetitle, 1000);
+		//soudane();
+		setTimeout(changetitle2, 1000);
 		if(isAkahukuNotFound()){
 			//404時
 			clearNormalReload();
+			changetitle();
+			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
+				var popupText = "スレは落ちています\r\n自動更新を停止しました";
+				showNotification(popupText);
+			}
+			/*
 			if (USE_SAVE_MHT) {
 				//saveMHT();	//未実装
 			}
+			*/
 			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		}
 		else {
@@ -290,11 +318,13 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			e.initEvent("click", false, true);
 			relbutton.dispatchEvent(e);
 		}
+		/*
 		setTimeout(function(){
 			if (!isWindowActive && isNotificationEnable) {
 				getNewResContent();
 			}
 		}, 1000);
+		*/
 	}
 	/**
 	 * MHTで保存
@@ -338,6 +368,17 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				if ( res !== 0) {
 					document.title = "(" + res + ")" + title_char;
 				}
+			}
+		}
+	}
+	/*
+	 * タブタイトルにスレ消滅状態を表示
+	 */
+	function changetitle2() {
+		if (USE_TITLE_NAME) {
+			var title_char = title_name();
+			if (isAkahukuNotFound()) {
+				document.title = "#" + title_char;
 			}
 		}
 	}
@@ -432,7 +473,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ファビコンからアイコン取得
 		var icon = $("head > link[rel='shortcut icon']").attr("href");
 		if (icon == null) {
-			icon = "https://www.2chan.net/favicon.ico";
+			icon = "/favicon.ico";
 		}
 		var instance = new Notification(
 			document.title, {
