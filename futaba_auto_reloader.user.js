@@ -471,7 +471,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		//ファビコンからアイコン取得
 		var icon = $("head > link[rel='shortcut icon']").attr("href");
 		if (icon == null) {
-			icon = "https://www.2chan.net/favicon.ico";
+			icon = "/favicon.ico";
 		}
 		var instance = new Notification(
 			document.title, {
