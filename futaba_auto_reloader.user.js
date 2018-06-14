@@ -30,6 +30,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
 	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する
 	var USE_BOARD_NAME = true;				//板名をタブに表示する
+	var NOTIFY_THREAD_NOT_FOUND = false;	//スレの消滅を通知する（通知ボタンとは独立して動作）
 
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
@@ -67,6 +68,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
 			clearNormalReload();
 			changetitle();
+			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
+				var popupText = "スレは落ちています\r\n自動更新を停止しました";
+				showNotification(popupText);
+			}
 			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		});
 
@@ -286,6 +291,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			//404時
 			clearNormalReload();
 			changetitle();
+			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
+				var popupText = "スレは落ちています\r\n自動更新を停止しました";
+				showNotification(popupText);
+			}
 			if (USE_SAVE_MHT) {
 				//saveMHT();	//未実装
 			}
