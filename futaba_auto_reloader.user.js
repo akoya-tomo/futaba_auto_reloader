@@ -55,6 +55,21 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function setNormalReload() {
 		timerNormal = setInterval(rel, RELOAD_INTERVAL_NORMAL);
 		console.log(script_name + ": Start auto reloading @" + url);
+	
+		document.addEventListener("KOSHIAN_reload", (e) => {
+			soudane();
+			changetitle();
+			if (!isWindowActive && isNotificationEnable) {
+				getNewResContent();
+			}
+		});
+
+		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
+			clearNormalReload();
+			changetitle();
+			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
+		});
+
 	}
 	//通常リロード停止
 	function clearNormalReload() {
@@ -265,11 +280,12 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 
 	function rel() {
-		soudane();
-		setTimeout(changetitle, 1000);
+		//soudane();
+		setTimeout(changetitle2, 1000);
 		if(isAkahukuNotFound()){
 			//404時
 			clearNormalReload();
+			changetitle();
 			if (USE_SAVE_MHT) {
 				//saveMHT();	//未実装
 			}
@@ -290,11 +306,13 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			e.initEvent("click", false, true);
 			relbutton.dispatchEvent(e);
 		}
+		/*
 		setTimeout(function(){
 			if (!isWindowActive && isNotificationEnable) {
 				getNewResContent();
 			}
 		}, 1000);
+		*/
 	}
 	/**
 	 * MHTで保存
@@ -338,6 +356,17 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				if ( res !== 0) {
 					document.title = "(" + res + ")" + title_char;
 				}
+			}
+		}
+	}
+	/*
+	 * タブタイトルにスレ消滅状態を表示
+	 */
+	function changetitle2() {
+		if (USE_TITLE_NAME) {
+			var title_char = title_name();
+			if (isAkahukuNotFound()) {
+				document.title = "#" + title_char;
 			}
 		}
 	}
