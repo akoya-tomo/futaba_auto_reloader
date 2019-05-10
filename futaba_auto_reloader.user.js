@@ -1,17 +1,19 @@
 // ==UserScript==
 // @name           futaba auto reloader k
 // @namespace      https://github.com/akoya-tomo
-// @description    KOSHIAN リロード拡張で自動更新しちゃう(実況モードもあるよ！)
+// @description    ふたば☆ちゃんねるで自動更新しちゃう(実況モードもあるよ！)
 // @author         akoya_tomo
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev6
+// @version        1.7.1rev7
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
 // @noframes
 // ==/UserScript==
+/* globals jQuery */
+
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 (function ($) {
@@ -28,10 +30,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var LIVE_TOGGLE_KEY = "76";						//実況モードON・OFF切り替えキーコード(With Alt)
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
-	//var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する（未実装）
+	var USE_SAVE_MHT = false;							// スレ消滅時にMHTで保存する（赤福のみ）
 	var USE_BOARD_NAME = true;				//板名をタブに表示する
 	var NOTIFY_THREAD_NOT_FOUND = false;	//スレの消滅を通知する（通知ボタンとは独立して動作）
 	var KEEP_THREAD_NOT_FOUND_MARK = false;		//タイトルのスレ消滅表示をリセット操作で消さない（true = 消さない : false = 消す）
+	var USE_SYNC_BUTTON = false;			//[同期]ボタンを使用する（赤福のみ）
 
 	var res = 0;	//新着レス数
 	var timerNormal, timerLiveReload, timerLiveScroll;
@@ -41,6 +44,9 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var isNotificationEnable = USE_NOTIFICATION_DEFAULT;	// 通知の有効フラグ
 	var serverName = document.domain.match(/^[^.]+/);
 	var boardName = $("#tit").text().match(/^[^＠]+/);
+	var resnum = $(".rtd").length;	// 総レス数
+	var newres_index = resnum;	// リロード前の総レス数
+	var normal_flag, live_flag;
 
 	if(!isFileNotFound()){
 		set_title();
@@ -52,6 +58,8 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	make_live_button();
 	addCss();
 	setWindowFocusEvent();
+	check_akahuku_reload();
+	check_futaba_reload();
 
 	//通常リロード開始
 	function setNormalReload() {
@@ -59,21 +67,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		console.log(script_name + ": Start auto reloading @" + url);
 	
 		document.addEventListener("KOSHIAN_reload", (e) => {
-			soudane();
-			changetitle();
-			if (!isWindowActive && isNotificationEnable) {
-				getNewResContent();
-			}
+			checkNewRes();
 		});
 
 		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
-			clearNormalReload();
-			changetitle();
-			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
-				var popupText = "スレは落ちています\r\n自動更新を停止しました";
-				showNotification(popupText);
-			}
-			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
+			stopAutoReloading();
 		});
 
 	}
@@ -81,6 +79,30 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function clearNormalReload() {
 		clearInterval(timerNormal);
 		console.log(script_name + ": Stop auto reloading @" + url);
+	}
+	/*
+	 * 新着レス確認
+	 */
+	function checkNewRes() {
+		newres_index = resnum;
+		resnum = $(".rtd").length;
+		soudane();
+		changetitle();
+		if (!isWindowActive && isNotificationEnable) {
+			getNewResContent();
+		}
+	}
+	/*
+	 * 自動リロード停止
+	 */
+	function stopAutoReloading() {
+		clearNormalReload();
+		changetitle();
+		if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
+			var popupText = "スレは落ちています\r\n自動更新を停止しました";
+			showNotification(popupText);
+		}
+		console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 	}
 	/*
 	 * 404チェック
@@ -98,7 +120,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * ボタン作成
 	 */
 	function make_live_button() {
-		var normal_flag = true;	//通常モード有効フラグ
+		normal_flag = true;	//通常モード有効フラグ
 		//通常モードボタン
 		var $normalButton = $("<a>", {
 			id: "GM_FAR_relButton_normal",
@@ -115,7 +137,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			}
 		});
 
-		var live_flag = false;	//実況モード有効フラグ
+		live_flag = false;	//実況モード有効フラグ
 		//実況モードボタン
 		var $liveButton = $("<a>", {
 			id: "GM_FAR_relButton_live",
@@ -147,7 +169,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			$notificationButton.css("background-color", "#a9d8ff");
 		}
 
-		var $input = $("input[name$='email']");	//KOSHIAN 返信フォームを固定に合わせて位置変更
+		var $input = $("input[name$='email']");	//「KOSHIAN 返信フォームを固定」に合わせて位置変更
 		$input.after($notificationButton);
 		$input.after($liveButton);
 		if(SHOW_NORMAL_BUTTON){
@@ -188,14 +210,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				//自動スクロール
 				timerLiveScroll = setInterval(live_scroll, LIVE_SCROLL_INTERVAL);
 				$liveButton.css("backgroundColor", "#ffa5f0");
-				//startspin();	//未実装
+				startspin();
 				console.log(script_name + ": Start live mode @" + url);
 				live_flag = true;
 			} else {
 				clearInterval(timerLiveReload);
 				clearInterval(timerLiveScroll);
 				$liveButton.css("background", "none");
-				//stopspin();		//未実装
+				stopspin();
 				console.log(script_name + ": Stop live mode @" + url);
 				live_flag = false;
 			}
@@ -255,22 +277,31 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 
 		}
 	}
-
+	/*
+	 * ボタンを返信ボタンの横に移動（赤福用）
+	 */
+	function moveLiveButton() {
+		var $input = $("input[value$='信する']");
+		$("#GM_FAR_notificationButton").insertAfter($input);
+		$("#GM_FAR_relButton_live").insertAfter($input);
+		$("#GM_FAR_relButton_normal").insertAfter($input);
+	}
 
 	/*
 	 * 新着レスをリセット
 	 */
 	function reset_title() {
 		//ページ末尾でホイールダウンした時
-		window.addEventListener("DOMMouseScroll",function scroll(event) {
-			var window_y = Math.ceil(window.scrollY);	//Windowsで拡大率使用時に小数点以下でずれる対応
-			var window_ymax = window.scrollMaxY;
-			//console.log(script_name + ": window y,yamx: " + window_y +',' + window_ymax);
-			if (event.detail > 0 && window_y >= window_ymax && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound())) {
+		window.addEventListener("wheel", function(event){
+			//Windowsで拡大率使用時にwindow_yが小数点以下でずれる対応
+			var window_y = Math.ceil($(window).height() + $(window).scrollTop());
+			var window_ymax = $(document).height();
+			//console.log(script_name + ": window_y,yamx,deltaY: " + window_y +',' + window_ymax + ',' + event.deltaY);
+			if (event.deltaY > 0 && window_y >= window_ymax && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound())) {
 				reset_titlename();
 			}
 			return;
-		} ,false);
+		}, false);
 		//F5キー押された時
 		window.addEventListener("keydown",function(e) {
 			if ( e.keyCode == "116" && (!KEEP_THREAD_NOT_FOUND_MARK || !isAkahukuNotFound()) ) {
@@ -286,22 +317,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 
 	function rel() {
-		//soudane();
-		setTimeout(changetitle2, 1000);
+		//soudane();	//新着レス確認にて実行
+		setTimeout(changetitle2, 1000);	//KOSHIAN リロード拡張対策
 		if(isAkahukuNotFound()){
 			//404時
-			clearNormalReload();
-			changetitle();
-			if (!isWindowActive && NOTIFY_THREAD_NOT_FOUND) {
-				var popupText = "スレは落ちています\r\n自動更新を停止しました";
-				showNotification(popupText);
-			}
-			/*
+			stopAutoReloading();
 			if (USE_SAVE_MHT) {
-				//saveMHT();	//未実装
+				saveMHT();
 			}
-			*/
-			console.log(script_name + ": Page not found, Stop auto reloading @" + url);
 		}
 		else {
 			clickrelbutton();
@@ -309,22 +332,101 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 	
 	/**
-	 * KOSHIANの［リロード］ボタンをクリック
+	 * ［リロード］ボタンをクリック
 	 */
 	function clickrelbutton() {
-		var relbutton = $("#contres > a").get(0);	//KOSHIANの[リロード]ボタン取得
+		var syncbutton = $("#akahuku_reload_syncbutton").get(0); 
+		var relbutton = $("#akahuku_reload_button").get(0);
+		var e = document.createEvent("MouseEvents");
+		e.initEvent("click", false, true);
+		if(USE_SYNC_BUTTON && syncbutton && !live_flag) {
+			// 赤福の[同期]ボタン（除く実況モード）
+			syncbutton.dispatchEvent(e);
+		} else
 		if(relbutton){
-			var e = document.createEvent("MouseEvents");
-			e.initEvent("click", false, true);
+			// 赤福の[続きを読む]ボタン
 			relbutton.dispatchEvent(e);
+		} else {
+			// ふたば or KOSHIANの[リロード]ボタン
+			relbutton = $("#contres > a").get(0);
+			if(relbutton){
+				relbutton.dispatchEvent(e);
+			}
 		}
-		/*
+		/* リロード完了を検出してから新着レスを確認するように変更
 		setTimeout(function(){
 			if (!isWindowActive && isNotificationEnable) {
 				getNewResContent();
 			}
 		}, 1000);
 		*/
+	}
+	/**
+	 * 赤福の動的リロードの状態を取得
+	 */
+	function check_akahuku_reload() {
+		var target = document.getElementById("akahuku_reload_status");
+		if (target) {
+			setAkahukuReloadObserver(target);
+			moveLiveButton();
+		} else {
+			document.addEventListener("AkahukuContentApplied", () => {
+				target = document.getElementById("akahuku_reload_status");
+				if (target) setAkahukuReloadObserver(target);
+				moveLiveButton();
+			});
+		}
+		function setAkahukuReloadObserver(target) {
+			var status = "";
+			var config = { childList: true };
+			var observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if (target.textContent == status) return;
+					status = target.textContent;
+					if (status.indexOf("新着") === 0) {
+						checkNewRes();
+					} else
+					if (status.indexOf("No") === 0 || status.indexOf("Mot") === 0) {
+						stopAutoReloading();
+						if (USE_SAVE_MHT) {
+							saveMHT();
+						}
+					}
+				});
+			});
+			observer.observe(target, config);
+		}
+	}
+	/**
+	 * ふたばの動的リロードの状態を取得
+	 */
+	function check_futaba_reload() {
+		var contdisp = document.getElementById("contdisp");
+		if (contdisp) {
+			setFutabaReloadObserver(contdisp);
+		}
+		function setFutabaReloadObserver(target) {
+			var status = "";
+			var reloading = false;
+			var config = { childList: true };
+			var observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if (target.textContent == status) return;
+					status = target.textContent;
+					if (status == "・・・") {
+						reloading = true;
+					} else 
+					if (reloading && status.endsWith("頃消えます")) {
+						checkNewRes();
+						reloading = false;
+					} else
+					if (status == "スレッドがありません") {
+						stopAutoReloading();
+					}
+				});
+			});
+			observer.observe(target, config);
+		}
 	}
 	/**
 	 * MHTで保存
@@ -358,12 +460,12 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function changetitle() {
 		if ( USE_TITLE_NAME ) {
 			var title_char = title_name();
-			var newres = $("#KOSHIAN_NOTIFY").text().match(/新着レス:(\d+)/);	//KOSHIANの新着レス数取得
+			var newres = Math.max(resnum - newres_index, 0);
 			if (isAkahukuNotFound()) {
 				document.title = "#" + title_char;
 			} else {
 				if(newres) {
-					res += parseInt(newres[1]);
+					res += newres;
 				}
 				if ( res !== 0) {
 					document.title = "(" + res + ")" + title_char;
@@ -384,33 +486,63 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 	// 新着レスの内容を取得
 	function getNewResContent() {
-		var $newrestable = $("#KOSHIAN_NOTIFY").nextAll('table');	//KOSHIAN新着レステーブル取得
-		if ($newrestable.length) {
-			var restexts = [];
-			$newrestable.each(function() {
-				var texts = [];
-				$(this).find("blockquote").contents().each(function() {
-					if ($(this).text() !== "") {
-						texts.push($(this).text());
-					}
+		if (resnum > newres_index) {
+			var $newrestable = $(".rtd").slice(newres_index);
+			if ($newrestable.length) {
+				var restexts = [];
+				$newrestable.each(function() {
+					var texts = [];
+					$(this).find("blockquote").contents().each(function() {
+						if ($(this).text() !== "") {
+							texts.push($(this).text());
+						}
+					});
+					restexts.push(texts.join("\r\n"));
 				});
-				restexts.push(texts.join("\r\n"));
-			});
-			var popupText = restexts.join("\r\n===============\r\n");
-			showNotification(popupText);
+				var popupText = restexts.join("\r\n===============\r\n");
+				showNotification(popupText);
+			}
 		}
 	}
 	/*
-	 * KOSHIANのステータスからスレ消滅状態をチェック
+	 * ステータスからスレ消滅状態をチェック
 	 */
 	function isAkahukuNotFound() {
-		var statustext = $("#KOSHIAN_NOTIFY").text();
-		if (statustext.match(/CODE:404/)) {
-			return true;
+		var statustext = null;
+		// KOSHIAN
+		var $status = $("#KOSHIAN_NOTIFY");
+		if ($status.length) {
+			statustext = $status.text();
+			if (statustext.match(/CODE:404/)) {
+				return true;
+			} else {
+				//return false	// KOSHIAN 返信フォーム拡張（改）が#KOSHIAN_NOTIFYを書き込むので、ここではreturnしない
+			}
 		}
-		else {
-			return false;
+		// 赤福
+		$status = $("#akahuku_reload_status");
+		if ($status.length) {
+			statustext = $status.text();
+			if (statustext.match(/(No Future)|((M|N)ot Found)/)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} else {
+			// ふたば
+			$status = $("#contdisp");
+			if ($status.length) {
+				statustext = $status.text();
+				if (statustext == "スレッドがありません") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
 		}
+		return false;
 	}
 
 	function title_name() {
@@ -471,8 +603,8 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	function showNotification(body) {
 		Notification.requestPermission();
 		//ファビコンからアイコン取得
-		var icon = $("head > link[rel='shortcut icon']").attr("href");
-		if (icon == null) {
+		var	icon = $("head > link[rel*='icon']").attr("href");
+		if (!icon) {
 			icon = "/favicon.ico";
 		}
 		var instance = new Notification(
@@ -481,6 +613,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				icon: icon,
 			}
 		);
+		instance.onclick = (e) => {
+			window.focus();
+			e.target.close();
+		};
 	}
 	//タイトルに板名を追加する
 	function set_title() {
