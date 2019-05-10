@@ -1,11 +1,13 @@
-## こしあんでもオートリロードがしたい！
-このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)を[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオン用に改変したものです。  
-[Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)アドオンをインストールしてからこのスクリプトをインストールしてください。  
-
+## futaba auto reloader K
+このUserscriptは[himuro\_majika](https://github.com/himuro-majika)氏の[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)をアドオン無しや[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)・[KOSHIAN リロード拡張 改](https://github.com/akoya-tomo/koshian_reload_futaba_kai)でも動作するように改変したものです。  
 ふたば☆ちゃんねるのスレを開いている間新着レスを自動で取得し続けます。  
 
-※このUserscriptは[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンの機能を使用しているためFirefox専用となります。  
-※このスクリプトにも使えるKOSHIAN リロード拡張の改変版は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki)の一覧からどうぞ。
+Firefoxの場合、[Tampermonkey](https://addons.mozilla.org/ja/firefox/addon/tampermonkey/)を先にインスールしてからスクリプトをインストールして下さい。  
+(GreasemonkeyやViolentmonkeyでの動作は未確認です)  
+Chromeの場合、[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)を先にインスールしてからスクリプトをインストールして下さい。  
+
+※このUserscriptは単体で利用可能ですが、Firefoxアドオン[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)・[KOSHIAN リロード拡張 改](https://github.com/akoya-tomo/koshian_reload_futaba_kai)・[赤福Extended・赤福Firefox sp](http://toshiakisp.github.io/akahuku-firefox-sp/)と併用することができます。Chromeアドオン[ふたクロ](http://futakuro.com/)との併用では動作しません。  
+※その他のふたば閲覧支援ツールは[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki/)。
 
 
 ## 機能
@@ -19,15 +21,21 @@
 * レスフォームのコメント欄を消去するボタンを追加
 * 各機能のカスタマイズはソースを参照
 * 新着レスをポップアップで通知  
-  スレを表示していない時に新着レスがあるとポップアップで表示されます。
-* 板名をタブのタイトルに表示
-* \(New\) スレ消滅をポップアップで通知（デフォルト：無効）  
-  スレが落ちたときにポップアップで表示されます。  
-  設定を有効にすると通知ボタンのオンオフと関係無くスレ消滅が通知されます。
-* \(New\) タイトルのスレ消滅表示をリセット操作で消さない（デフォルト：無効）  
-  ページ下端でのホイールダウンなどのリセット操作でスレ消滅表示が消えなくなります。  
-  スレ消滅に気付かずに閲覧中にホイールダウンしてスレ消滅表示を消してしまうことを防ぎます。    
+  スレを表示していない時に新着レスがあるとポップアップで表示されます。  
 
+**追加機能**  
+
+* 板名をタブのタイトルに表示（デフォルト：有効）  
+* スレ消滅をポップアップで通知（デフォルト：無効）  
+  スレが落ちたときにポップアップで表示されます。  
+  設定を有効にすると通知ボタンのオンオフと関係無くスレ消滅が通知されます。  
+* タイトルのスレ消滅表示をリセット操作で消さない（デフォルト：無効）  
+  ページ下端でのホイールダウンなどのリセット操作でスレ消滅表示が消えなくなります。  
+  スレ消滅に気付かずに閲覧中にホイールダウンしてスレ消滅表示を消してしまうことを防ぎます。  
+* 自動更新時に\[同期\]ボタンを使用する（赤福使用時　デフォルト：無効）  
+  通常モードでの自動更新時に\[同期\]ボタンを使用してスレを同期します。  
+  赤福の設定から「続きを読む」→ 「\[同期\]ボタン」を有効にした状態で使用してください。  
+  実況モードでは同期しません。  
 
 ## インストール
 [GreasyFork](https://greasyfork.org/ja/scripts/36235-futaba-auto-reloader-k)　
@@ -35,15 +43,18 @@
 
 
 ## 注意事項
-※このUserscriptはFirefoxで[KOSHIAN リロード拡張](https://addons.mozilla.org/ja/firefox/addon/koshian-reload-futaba/)アドオンまたは[KOSHIAN リロード拡張 改](https://github.com/akoya-tomo/koshian_reload_futaba_kai)アドオンをインストールしている事が前提となります。
+* 返信フォームを固定するアドオン（[KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)・[KOSHIAN 返信フォームを固定 改](https://github.com/akoya-tomo/koshian_float_form_kai/)・[赤福Extended・赤福Firefox sp](http://toshiakisp.github.io/akahuku-firefox-sp/)）または返信フォームを固定するスタイルシートを使用することをおすすめします。  
+(実況モード時は自動スクロールするため)  
 
-アドオンの設定に関して
+**アドオンの設定に関して**
 
-* KOSHIAN リロード拡張の設定から **「デフォルトの［リロード］ボタンを置き換える」** を **有効** にした状態で使用してください。  
-* [KOSHIAN 返信フォームを固定](https://addons.mozilla.org/ja/firefox/addon/koshian-float-form/)アドオンまたは[KOSHIAN 返信フォームを固定 改](https://github.com/akoya-tomo/koshian_float_form_kai/)アドオンを使用することをおすすめします。(実況モード時は自動スクロールするため)  
-* [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオンか[futaba favicon changer](https://greasyfork.org/ja/scripts/39342-futaba-favicon-changer/)スクリプトがインストールされていると通知のアイコンがスレ画になります。  
+* KOSHIAN リロード拡張（改）の設定から
+  - 「デフォルトの［リロード］ボタンを置き換える」を有効にした状態で使用してください。  
 
-通知機能に関して
+* 赤福の設定から  
+  - 「続きを読む」→ 「続きを読む」を有効にした状態で使用してください。  
+
+**通知機能に関して**
 
 *  [通知]ボタンをクリックした際に初回のみ「このサイトからの通知を表示しますか？」と確認が出るので  
 	 **「常に通知を表示する」**  
@@ -52,15 +63,17 @@
 	ロケーションバー(URLバー)の左のアイコンをクリックして  
 	 **「サイトからの通知の表示」** を **「許可」**  
 	 に設定してください。
+* [KOSHIAN Favicon Changer](https://addons.mozilla.org/ja/firefox/addon/koshian-favicon-changer/)アドオン・[futaba favicon changer](https://greasyfork.org/ja/scripts/39342-futaba-favicon-changer/)スクリプトまたは[赤福Extended・赤福Firefox sp](http://toshiakisp.github.io/akahuku-firefox-sp/)がインストールされていると通知のアイコンがスレ画になります。  
 
-オリジナル版にあってこのUserscriptに無い機能について
+**オリジナル版にあってこのUserscriptに無い機能について**
 
-* ふたボードはKOSHIAN リロード拡張が動作しないため非対応です。
-* スレ消滅時にMHT保存する隠し機能がありません。
-* 実況モードON時の顔マーク回転がありません。
+* ふたボードは非対応です。[futaba auto reloader](https://github.com/himuro-majika/futaba_auto_reloader)をご利用ください。  
 
 ## 更新履歴
 
+* v1.7.1rev7 2019-05-11
+  - アドオン無しや赤福Extended・赤福Firefox spでも動作するように修正
+  - 自動更新時に\[同期\]ボタンを使用する設定を追加
 * v1.7.1rev6 2018-06-14
   - スレ消滅時にポップアップで通知する設定を追加
   - タイトルのスレ消滅表示をリセット操作で消さない設定を追加
