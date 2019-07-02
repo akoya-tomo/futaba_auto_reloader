@@ -6,7 +6,7 @@
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev7
+// @version        1.7.1rev8
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
@@ -66,11 +66,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		timerNormal = setInterval(rel, RELOAD_INTERVAL_NORMAL);
 		console.log(script_name + ": Start auto reloading @" + url);
 	
-		document.addEventListener("KOSHIAN_reload", (e) => {
+		$(document).on("KOSHIAN_reload", () => {
 			checkNewRes();
 		});
 
-		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
+		$(document).on("KOSHIAN_reload_notfound", () => {
 			stopAutoReloading();
 		});
 
@@ -169,7 +169,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			$notificationButton.css("background-color", "#a9d8ff");
 		}
 
-		var $input = $("input[name$='email']");	//「KOSHIAN 返信フォームを固定」に合わせて位置変更
+		var $input = $("#KOSHIAN_form_sage_button").length ? $("#KOSHIAN_form_sage_button") : $("input[name$='email']");	// 「KOSHIAN 返信フォームを固定」に合わせて位置変更
 		$input.after($notificationButton);
 		$input.after($liveButton);
 		if(SHOW_NORMAL_BUTTON){
@@ -335,15 +335,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * ［リロード］ボタンをクリック
 	 */
 	function clickrelbutton() {
-		var syncbutton = $("#akahuku_reload_syncbutton").get(0); 
+		var syncbutton = $("#akahuku_reload_syncbutton").get(0);
 		var relbutton = $("#akahuku_reload_button").get(0);
 		var e = document.createEvent("MouseEvents");
 		e.initEvent("click", false, true);
 		if(USE_SYNC_BUTTON && syncbutton && !live_flag) {
 			// 赤福の[同期]ボタン（除く実況モード）
 			syncbutton.dispatchEvent(e);
-		} else
-		if(relbutton){
+		} else if(relbutton){
 			// 赤福の[続きを読む]ボタン
 			relbutton.dispatchEvent(e);
 		} else {
@@ -365,34 +364,37 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * 赤福の動的リロードの状態を取得
 	 */
 	function check_akahuku_reload() {
-		var target = document.getElementById("akahuku_reload_status");
+		var target = $("#akahuku_reload_status").get(0);
 		if (target) {
 			setAkahukuReloadObserver(target);
 			moveLiveButton();
 		} else {
-			document.addEventListener("AkahukuContentApplied", () => {
-				target = document.getElementById("akahuku_reload_status");
-				if (target) setAkahukuReloadObserver(target);
-				moveLiveButton();
+			$(document).on("AkahukuContentApplied", () => {
+				target = $("#akahuku_reload_status").get(0);
+				if (target) {
+					setAkahukuReloadObserver(target);
+					moveLiveButton();
+				} else {
+					console.error (script_name + " - #akahuku_reload_status not found");
+				}
 			});
 		}
 		function setAkahukuReloadObserver(target) {
 			var status = "";
 			var config = { childList: true };
-			var observer = new MutationObserver(function(mutations) {
-				mutations.forEach(function(mutation) {
-					if (target.textContent == status) return;
-					status = target.textContent;
-					if (status.indexOf("新着") === 0) {
-						checkNewRes();
-					} else
-					if (status.indexOf("No") === 0 || status.indexOf("Mot") === 0) {
-						stopAutoReloading();
-						if (USE_SAVE_MHT) {
-							saveMHT();
-						}
+			var observer = new MutationObserver(function() {
+				if (target.textContent == status) {
+					return;
+				}
+				status = target.textContent;
+				if (status.indexOf("新着") === 0) {
+					checkNewRes();
+				} else if (status.indexOf("No") === 0 || status.indexOf("Mot") === 0) {
+					stopAutoReloading();
+					if (USE_SAVE_MHT) {
+						saveMHT();
 					}
-				});
+				}
 			});
 			observer.observe(target, config);
 		}
@@ -401,7 +403,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * ふたばの動的リロードの状態を取得
 	 */
 	function check_futaba_reload() {
-		var contdisp = document.getElementById("contdisp");
+		var contdisp = $("#contdisp").get(0);
 		if (contdisp) {
 			setFutabaReloadObserver(contdisp);
 		}
@@ -409,21 +411,22 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			var status = "";
 			var reloading = false;
 			var config = { childList: true };
-			var observer = new MutationObserver(function(mutations) {
-				mutations.forEach(function(mutation) {
-					if (target.textContent == status) return;
-					status = target.textContent;
-					if (status == "・・・") {
-						reloading = true;
-					} else 
-					if (reloading && status.endsWith("頃消えます")) {
-						checkNewRes();
-						reloading = false;
-					} else
-					if (status == "スレッドがありません") {
-						stopAutoReloading();
-					}
-				});
+			var observer = new MutationObserver(function() {
+				if (target.textContent == status) {
+					return;
+				}
+				status = target.textContent;
+				if (status == "・・・") {
+					reloading = true;
+				} else if (reloading && status.endsWith("頃消えます")) {
+					checkNewRes();
+					reloading = false;
+				} else if (status == "スレッドがありません") {
+					stopAutoReloading();
+					reloading = false;
+				} else {
+					reloading = false;
+				}
 			});
 			observer.observe(target, config);
 		}
