@@ -365,34 +365,37 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * 赤福の動的リロードの状態を取得
 	 */
 	function check_akahuku_reload() {
-		var target = document.getElementById("akahuku_reload_status");
+		var target = $("#akahuku_reload_status").get(0);
 		if (target) {
 			setAkahukuReloadObserver(target);
 			moveLiveButton();
 		} else {
-			document.addEventListener("AkahukuContentApplied", () => {
-				target = document.getElementById("akahuku_reload_status");
-				if (target) setAkahukuReloadObserver(target);
-				moveLiveButton();
+			$(document).on("AkahukuContentApplied", () => {
+				target = $("#akahuku_reload_status").get(0);
+				if (target) {
+					setAkahukuReloadObserver(target);
+					moveLiveButton();
+				} else {
+					console.error (script_name + " - #akahuku_reload_status not found");
+				}
 			});
 		}
 		function setAkahukuReloadObserver(target) {
 			var status = "";
 			var config = { childList: true };
-			var observer = new MutationObserver(function(mutations) {
-				mutations.forEach(function(mutation) {
-					if (target.textContent == status) return;
-					status = target.textContent;
-					if (status.indexOf("新着") === 0) {
-						checkNewRes();
-					} else
-					if (status.indexOf("No") === 0 || status.indexOf("Mot") === 0) {
-						stopAutoReloading();
-						if (USE_SAVE_MHT) {
-							saveMHT();
-						}
+			var observer = new MutationObserver(function() {
+				if (target.textContent == status) {
+					return;
+				}
+				status = target.textContent;
+				if (status.indexOf("新着") === 0) {
+					checkNewRes();
+				} else if (status.indexOf("No") === 0 || status.indexOf("Mot") === 0) {
+					stopAutoReloading();
+					if (USE_SAVE_MHT) {
+						saveMHT();
 					}
-				});
+				}
 			});
 			observer.observe(target, config);
 		}
@@ -401,7 +404,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * ふたばの動的リロードの状態を取得
 	 */
 	function check_futaba_reload() {
-		var contdisp = document.getElementById("contdisp");
+		var contdisp = $("#contdisp").get(0);
 		if (contdisp) {
 			setFutabaReloadObserver(contdisp);
 		}
@@ -409,21 +412,22 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			var status = "";
 			var reloading = false;
 			var config = { childList: true };
-			var observer = new MutationObserver(function(mutations) {
-				mutations.forEach(function(mutation) {
-					if (target.textContent == status) return;
-					status = target.textContent;
-					if (status == "・・・") {
-						reloading = true;
-					} else 
-					if (reloading && status.endsWith("頃消えます")) {
-						checkNewRes();
-						reloading = false;
-					} else
-					if (status == "スレッドがありません") {
-						stopAutoReloading();
-					}
-				});
+			var observer = new MutationObserver(function() {
+				if (target.textContent == status) {
+					return;
+				}
+				status = target.textContent;
+				if (status == "・・・") {
+					reloading = true;
+				} else if (reloading && status.endsWith("頃消えます")) {
+					checkNewRes();
+					reloading = false;
+				} else if (status == "スレッドがありません") {
+					stopAutoReloading();
+					reloading = false;
+				} else {
+					reloading = false;
+				}
 			});
 			observer.observe(target, config);
 		}
