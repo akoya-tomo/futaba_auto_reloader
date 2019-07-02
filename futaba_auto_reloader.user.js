@@ -66,11 +66,11 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		timerNormal = setInterval(rel, RELOAD_INTERVAL_NORMAL);
 		console.log(script_name + ": Start auto reloading @" + url);
 	
-		document.addEventListener("KOSHIAN_reload", (e) => {
+		$(document).on("KOSHIAN_reload", () => {
 			checkNewRes();
 		});
 
-		document.addEventListener("KOSHIAN_reload_notfound", (e) => {
+		$(document).on("KOSHIAN_reload_notfound", () => {
 			stopAutoReloading();
 		});
 
@@ -335,15 +335,14 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	 * ［リロード］ボタンをクリック
 	 */
 	function clickrelbutton() {
-		var syncbutton = $("#akahuku_reload_syncbutton").get(0); 
+		var syncbutton = $("#akahuku_reload_syncbutton").get(0);
 		var relbutton = $("#akahuku_reload_button").get(0);
 		var e = document.createEvent("MouseEvents");
 		e.initEvent("click", false, true);
 		if(USE_SYNC_BUTTON && syncbutton && !live_flag) {
 			// 赤福の[同期]ボタン（除く実況モード）
 			syncbutton.dispatchEvent(e);
-		} else
-		if(relbutton){
+		} else if(relbutton){
 			// 赤福の[続きを読む]ボタン
 			relbutton.dispatchEvent(e);
 		} else {
