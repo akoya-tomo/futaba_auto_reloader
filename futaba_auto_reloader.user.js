@@ -169,7 +169,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 			$notificationButton.css("background-color", "#a9d8ff");
 		}
 
-		var $input = $("input[name$='email']");	//「KOSHIAN 返信フォームを固定」に合わせて位置変更
+		var $input = $("#KOSHIAN_form_sage_button").length ? $("#KOSHIAN_form_sage_button") : $("input[name$='email']");	// 「KOSHIAN 返信フォームを固定」に合わせて位置変更
 		$input.after($notificationButton);
 		$input.after($liveButton);
 		if(SHOW_NORMAL_BUTTON){
