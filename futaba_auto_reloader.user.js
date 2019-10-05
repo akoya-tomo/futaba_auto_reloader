@@ -26,7 +26,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var RELOAD_INTERVAL_NORMAL = 60000;		//リロード間隔[ミリ秒](通常時)
 	var RELOAD_INTERVAL_LIVE = 5000;			//リロード間隔[ミリ秒](実況モード時)
 	var LIVE_SCROLL_INTERVAL = 12;				//実況モードスクロール間隔[ミリ秒]
-	var LIVE_SCROLL_SPEED = 2;						//実況モードスクロール幅[px]
+	var LIVE_SCROLL_SPEED = 3;						//実況モードスクロール幅[px]
 	var LIVE_TOGGLE_KEY = "76";						//実況モードON・OFF切り替えキーコード(With Alt)
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
