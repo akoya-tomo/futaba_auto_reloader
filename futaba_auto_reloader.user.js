@@ -6,7 +6,7 @@
 // @include        http://*.2chan.net/*/res/*
 // @include        https://*.2chan.net/*/res/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
-// @version        1.7.1rev8
+// @version        1.7.1rev9
 // @grant          GM_addStyle
 // @license        MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAPUExURYv4i2PQYy2aLUe0R////zorx9oAAAAFdFJOU/////8A+7YOUwAAAElJREFUeNqUj1EOwDAIQoHn/c88bX+2fq0kRsAoUXVAfwzCttWsDWzw0kNVWd2tZ5K9gqmMZB8libt4pSg6YlO3RnTzyxePAAMAzqMDgTX8hYYAAAAASUVORK5CYII=
@@ -26,7 +26,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var RELOAD_INTERVAL_NORMAL = 60000;		//リロード間隔[ミリ秒](通常時)
 	var RELOAD_INTERVAL_LIVE = 5000;			//リロード間隔[ミリ秒](実況モード時)
 	var LIVE_SCROLL_INTERVAL = 12;				//実況モードスクロール間隔[ミリ秒]
-	var LIVE_SCROLL_SPEED = 2;						//実況モードスクロール幅[px]
+	var LIVE_SCROLL_SPEED = 3;						//実況モードスクロール幅[px]
 	var LIVE_TOGGLE_KEY = "76";						//実況モードON・OFF切り替えキーコード(With Alt)
 	var SHOW_NORMAL_BUTTON = true;				//通常モードボタンを表示する
 	var USE_NOTIFICATION_DEFAULT = false;	// 新着レスの通知をデフォルトで有効にする
@@ -47,6 +47,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var resnum = $(".rtd").length;	// 総レス数
 	var newres_index = resnum;	// リロード前の総レス数
 	var normal_flag, live_flag;
+	var rel_flag = false;
 
 	if(!isFileNotFound()){
 		set_title();
@@ -67,6 +68,9 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		console.log(script_name + ": Start auto reloading @" + url);
 	
 		$(document).on("KOSHIAN_reload", () => {
+			if (live_flag) {
+				rel_flag = true;
+			}
 			checkNewRes();
 		});
 
@@ -597,6 +601,15 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		$(window).bind("focus", function() {
 			//タブアクティブ時
 			isWindowActive = true;
+			if (live_flag && rel_flag) {
+				//実況モードかつKOSHIAN改がリロードしていたらリロードして実況モードのタイマーをリセット
+				clickrelbutton();
+				$("#GM_FAR_relButton_live").click();
+				setTimeout(() => {
+					$("#GM_FAR_relButton_live").click();
+				}, 100);
+			}
+			rel_flag = false;
 		}).bind("blur", function() {
 			//タブ非アクティブ時
 			isWindowActive = false;
