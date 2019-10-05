@@ -47,6 +47,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	var resnum = $(".rtd").length;	// 総レス数
 	var newres_index = resnum;	// リロード前の総レス数
 	var normal_flag, live_flag;
+	var rel_flag = false;
 
 	if(!isFileNotFound()){
 		set_title();
@@ -67,6 +68,9 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		console.log(script_name + ": Start auto reloading @" + url);
 	
 		$(document).on("KOSHIAN_reload", () => {
+			if (live_flag) {
+				rel_flag = true;
+			}
 			checkNewRes();
 		});
 
@@ -597,6 +601,15 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 		$(window).bind("focus", function() {
 			//タブアクティブ時
 			isWindowActive = true;
+			if (live_flag && rel_flag) {
+				//実況モードかつKOSHIAN改がリロードしていたらリロードして実況モードのタイマーをリセット
+				clickrelbutton();
+				$("#GM_FAR_relButton_live").click();
+				setTimeout(() => {
+					$("#GM_FAR_relButton_live").click();
+				}, 100);
+			}
+			rel_flag = false;
 		}).bind("blur", function() {
 			//タブ非アクティブ時
 			isWindowActive = false;
