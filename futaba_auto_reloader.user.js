@@ -456,6 +456,8 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 				if (sodnum){
 					var col = "rgb(180, 240," + (Math.round(10 * sodnum + 180)) + ")";
 					$(this).parent().css("background-color", col);
+				} else {
+					$(this).parent().css("background-color", "");
 				}
 			});
 		}
